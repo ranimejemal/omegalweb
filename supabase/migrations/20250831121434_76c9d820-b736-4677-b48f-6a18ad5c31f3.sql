@@ -9,7 +9,10 @@ CREATE TABLE public.profiles (
   height INTEGER, -- in cm
   race TEXT,
   age INTEGER,
+<<<<<<< HEAD
   religion Text,
+=======
+>>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
   created_at TIMESTAMP WITH TIME ZONE DEFAULT now(),
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT now()
 );

@@ -40,7 +40,11 @@ const Chat = () => {
     const initializeChat = async () => {
       const user = await getCurrentUser();
       if (!user) {
+<<<<<<< HEAD
         navigate('/chat');
+=======
+        navigate('/auth');
+>>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
         return;
       }
       
@@ -222,7 +226,11 @@ const Chat = () => {
               onClick={() => navigate('/')}
               className="text-xs px-2 py-1"
             >
+<<<<<<< HEAD
               Home
+=======
+              Really?
+>>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
             </Button>
           </div>
         </div>

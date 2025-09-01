@@ -49,10 +49,20 @@ const Index = () => {
     fetchInterests();
   }, []);
 
+<<<<<<< HEAD
  const startTextChat = () => {
   navigate('/chat', { state: { chatType: 'text', interests } });
 };
 
+=======
+  const startTextChat = () => {
+    if (!user) {
+      setShowUpgradeModal(true);
+      return;
+    }
+    navigate('/chat', { state: { chatType: 'text', interests } });
+  };
+>>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
 
   const handleSignOut = async () => {
     await signOut();
@@ -91,7 +101,11 @@ const Index = () => {
       {/* Header */}
       <div className="flex justify-between items-center p-4 border-b">
         <div>
+<<<<<<< HEAD
           <h1 className="text-2xl font-bold text-primary">Omegale</h1>
+=======
+          <h1 className="text-2xl font-bold text-primary">Omegle Premium</h1>
+>>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
           <p className="text-sm text-muted-foreground">Talk to strangers!</p>
         </div>
         
@@ -189,6 +203,7 @@ const Index = () => {
 
         {/* Chat Buttons */}
         <div className="space-y-2 mb-8">
+<<<<<<< HEAD
          <Button 
   onClick={startTextChat}
   className="w-full bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-3"
@@ -196,6 +211,14 @@ const Index = () => {
   Start Text Chat
 </Button>
 
+=======
+          <Button 
+            onClick={startTextChat}
+            className="w-full bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-3"
+          >
+            {user ? "Start Random Chat" : "Sign Up to Chat"}
+          </Button>
+>>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
           
           <Button 
             variant="outline" 
