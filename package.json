@@ -4,12 +4,12 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "vite build",
-  "build:dev": "vite build --mode development",
-  "lint": "eslint .",
-  "preview": "vite preview"
-},
+    "dev": "vite",
+    "build": "vite build",
+    "build:dev": "vite build --mode development",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
   "dependencies": {
     "@hookform/resolvers": "^3.10.0",
     "@radix-ui/react-accordion": "^1.2.11",
@@ -46,10 +46,7 @@
     "cmdk": "^1.1.1",
     "date-fns": "^3.6.0",
     "embla-carousel-react": "^8.6.0",
-<<<<<<< HEAD
     "framer-motion": "^12.23.12",
-=======
->>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
     "input-otp": "^1.4.2",
     "lucide-react": "^0.462.0",
     "next-themes": "^0.3.0",
@@ -63,10 +60,7 @@
     "sonner": "^1.7.4",
     "tailwind-merge": "^2.6.0",
     "tailwindcss-animate": "^1.0.7",
-<<<<<<< HEAD
     "uuid": "^11.1.0",
-=======
->>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
     "vaul": "^0.9.9",
     "zod": "^3.25.76"
   },
@@ -76,10 +70,7 @@
     "@types/node": "^22.16.5",
     "@types/react": "^18.3.23",
     "@types/react-dom": "^18.3.7",
-<<<<<<< HEAD
     "@types/uuid": "^10.0.0",
-=======
->>>>>>> 00f723431a14e79ef9c5cd80b170d2571fe2cafe
     "@vitejs/plugin-react-swc": "^3.11.0",
     "autoprefixer": "^10.4.21",
     "eslint": "^9.32.0",
