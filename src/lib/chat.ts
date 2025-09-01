@@ -38,7 +38,6 @@ export const findAvailableUser = async (currentUserId: string, interests: string
     .from('profiles')
     .select('user_id')
     .neq('user_id', currentUserId)
-    .eq('is_premium', true)
     .limit(10);
 
   if (error) throw error;

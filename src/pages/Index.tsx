@@ -1,9 +1,13 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { getCurrentUser, signOut } from "@/lib/auth";
+import { getOrCreateAnonymousUser } from "@/lib/anonymous";
+import UpgradeModal from "@/components/UpgradeModal";
 import { User } from "@supabase/supabase-js";
+import { Crown, Search, Users } from "lucide-react";
 
 const Index = () => {
   const navigate = useNavigate();
@@ -11,6 +15,8 @@ const Index = () => {
   const [availableInterests, setAvailableInterests] = useState<any[]>([]);
   const [user, setUser] = useState<User | null>(null);
   const [userProfile, setUserProfile] = useState<any>(null);
+  const [anonymousUser, setAnonymousUser] = useState<any>(null);
+  const [showUpgradeModal, setShowUpgradeModal] = useState(false);
 
   useEffect(() => {
     // Check authentication
@@ -26,6 +32,10 @@ const Index = () => {
           .eq('user_id', currentUser.id)
           .single();
         setUserProfile(profile);
+      } else {
+        // Create anonymous user for browsing
+        const anonUser = getOrCreateAnonymousUser();
+        setAnonymousUser(anonUser);
       }
     };
     
@@ -40,8 +50,8 @@ const Index = () => {
   }, []);
 
   const startTextChat = () => {
-    if (!user || !userProfile) {
-      navigate('/auth');
+    if (!user) {
+      setShowUpgradeModal(true);
       return;
     }
     navigate('/chat', { state: { chatType: 'text', interests } });
@@ -51,6 +61,9 @@ const Index = () => {
     await signOut();
     setUser(null);
     setUserProfile(null);
+    // Create new anonymous user
+    const anonUser = getOrCreateAnonymousUser();
+    setAnonymousUser(anonUser);
   };
 
   const toggleInterest = (interestName: string) => {
@@ -59,6 +72,21 @@ const Index = () => {
         ? prev.filter(i => i !== interestName)
         : [...prev, interestName]
     );
+  };
+
+  const handleUpgradeComplete = async () => {
+    // Refresh user data after upgrade
+    const currentUser = await getCurrentUser();
+    if (currentUser) {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('user_id', currentUser.id)
+        .single();
+      setUserProfile(profile);
+      setUser(currentUser);
+      setAnonymousUser(null);
+    }
   };
 
   return (
@@ -72,6 +100,12 @@ const Index = () => {
         
         {user ? (
           <div className="flex items-center gap-4">
+            {userProfile?.is_premium && (
+              <Badge className="bg-primary">
+                <Crown className="w-3 h-3 mr-1" />
+                Premium
+              </Badge>
+            )}
             <span className="text-sm text-foreground">
               Welcome, {userProfile?.email || user.email}
             </span>
@@ -80,9 +114,17 @@ const Index = () => {
             </Button>
           </div>
         ) : (
-          <Button onClick={() => navigate('/auth')}>
-            Sign In
-          </Button>
+          <div className="flex items-center gap-2">
+            {anonymousUser && (
+              <Badge variant="outline">
+                👤 Anonymous
+              </Badge>
+            )}
+            <Button onClick={() => setShowUpgradeModal(true)}>
+              <Crown className="w-4 h-4 mr-2" />
+              Upgrade
+            </Button>
+          </div>
         )}
       </div>
 
@@ -98,13 +140,28 @@ const Index = () => {
           </p>
         </div>
 
-        {!user && (
+        {/* Browse Partners Section */}
+        <div className="mb-6">
+          <Button 
+            onClick={() => navigate('/browse')}
+            variant="outline"
+            className="w-full py-3 mb-4"
+          >
+            <Search className="w-4 h-4 mr-2" />
+            Browse Partners
+          </Button>
+          <p className="text-xs text-muted-foreground text-center">
+            {user ? "Find partners with advanced filters" : "Browse anonymously or upgrade for advanced filters"}
+          </p>
+        </div>
+
+        {!user && anonymousUser && (
           <div className="text-center mb-6 p-4 bg-primary/10 border border-primary/20 rounded">
             <p className="text-sm text-foreground mb-2">
-              <strong>Premium Features Required</strong>
+              <strong>Browsing Anonymously</strong>
             </p>
             <p className="text-xs text-muted-foreground">
-              Sign up for premium access to chat with real users and use advanced matching filters.
+              You can browse partners anonymously. Sign up for premium to unlock advanced filters and start chatting.
             </p>
           </div>
         )}
@@ -137,10 +194,9 @@ const Index = () => {
         <div className="space-y-2 mb-8">
           <Button 
             onClick={startTextChat}
-            disabled={!user || !userProfile}
             className="w-full bg-primary hover:bg-primary-hover text-primary-foreground font-medium py-3"
           >
-            {user ? "Start Text Chat" : "Sign In to Chat"}
+            {user ? "Start Random Chat" : "Sign Up to Chat"}
           </Button>
           
           <Button 
@@ -165,6 +221,12 @@ const Index = () => {
           </p>
         </div>
       </div>
+
+      <UpgradeModal
+        isOpen={showUpgradeModal}
+        onClose={() => setShowUpgradeModal(false)}
+        onUpgradeComplete={handleUpgradeComplete}
+      />
     </div>
   );
 };
